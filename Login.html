@@ -45,7 +45,7 @@
                 try {
                     const snapshot = await get(child(dbRef, "controlladminsown/" + code));
                     if (snapshot.exists()) {
-                        window.location.href = "index.php";
+                        window.location.href = "Main.html";
                     } else {
                         errorBox.textContent = "Error code, contact the developer";
                         errorBox.style.display = "block";
