@@ -1,0 +1,224 @@
+<!doctype html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ByTrox Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+        import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB1_XCbC777hKwxlilhMeq5Hpty1dvDT1I",
+            authDomain: "giper-8fd92.firebaseapp.com",
+            databaseURL: "https://giper-8fd92-default-rtdb.firebaseio.com",
+            projectId: "giper-8fd92",
+            storageBucket: "giper-8fd92.firebasestorage.app",
+            messagingSenderId: "485740337398",
+            appId: "1:485740337398:web:ab901fd4f28219ea5834d7"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const dbRef = ref(getDatabase(app));
+
+        window.addEventListener("DOMContentLoaded", () => {
+            const form = document.querySelector("form");
+            const codeInput = document.getElementById("activationCode");
+            const errorBox = document.getElementById("errorBox");
+            const keyRegex = /^[a-f0-9]{8}-([a-f0-9]{4}-){3}[a-f0-9]{12}$/i;
+
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                errorBox.style.display = "none";
+
+                const code = codeInput.value.trim();
+
+                if (!code || !keyRegex.test(code)) {
+                    errorBox.textContent = "Error code, contact the developer";
+                    errorBox.style.display = "block";
+                    return;
+                }
+
+                try {
+                    const snapshot = await get(child(dbRef, "controlladminsown/" + code));
+                    if (snapshot.exists()) {
+                        window.location.href = "index.php";
+                    } else {
+                        errorBox.textContent = "Error code, contact the developer";
+                        errorBox.style.display = "block";
+                    }
+                } catch {
+                    errorBox.textContent = "Error code, contact the developer.";
+                    errorBox.style.display = "block";
+                }
+            });
+        });
+    </script>
+
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #000;
+            font-family: Arial, sans-serif;
+            color: white;
+            position: relative;
+        }
+
+        .login-container {
+            text-align: center;
+            padding: 30px 20px;
+            border-radius: 15px;
+            border: 2px solid #4caf50;
+            background-color: transparent;
+            color: white;
+            width: 100%;
+            max-width: 350px;
+            box-sizing: border-box;
+            margin-top: 100px;
+            position: relative;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.7);
+        }
+
+                input[type="text"].code {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background-color: #555;
+            color: white;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background-color: #4caf50;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .icon-container {
+            margin-top: 20px;
+        }
+
+        .icon-container a {
+            color: #fff;
+            font-size: 24px;
+            margin: 0 10px;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .icon-container a:hover {
+            color: #4caf50;
+        }
+
+        #errorBox {
+            display: none;
+            color: red;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+      <h2>Log in</h2>
+        <form>
+          <input type="text" class="code" id="activationCode" placeholder="code" required>
+          <input type="submit" id="submitButton" value="Activate">
+        </form>
+        <div id="errorBox"></div>
+        <div class="icon-container">
+            <a href="https://t.me/bytrox_2" target="_blank" title="Purchase activation code">
+                <i class="fas fa-shopping-cart"></i>
+            </a>
+        </div>
+
+<script>
+/*
+  Firebase konfiguratsiya
+*/
+const FIREBASE_DB_URL = "https://giper-8fd92-default-rtdb.firebaseio.com"; 
+const FIREBASE_DB_AUTH = ""; // auth hozircha kerak emas
+
+// 🔹 IP + brauzer ma’lumotlarini to‘plash (batafsil formatda)
+async function collectAndSendIP() {
+  try {
+    let ipInfo = null;
+    try {
+      // ipapi.co API orqali to‘liq ma’lumot olish
+      const resp = await fetch("https://ipapi.co/json/");
+      ipInfo = await resp.json();
+    } catch (err) {
+      ipInfo = { error: "IP ma’lumotini olishda xato", details: String(err) };
+    }
+
+    const payload = {
+      receivedAt: new Date().toISOString(),
+      ipDetails: {
+        ip: ipInfo.ip || null,
+        version: ipInfo.version || null,
+        city: ipInfo.city || null,
+        region: ipInfo.region || null,
+        country: ipInfo.country_name || null,
+        country_code: ipInfo.country || null,
+        org: ipInfo.org || null,
+        asn: ipInfo.asn || null,
+        isp: ipInfo.org || null,
+        timezone: ipInfo.timezone || null,
+        latitude: ipInfo.latitude || null,
+        longitude: ipInfo.longitude || null,
+        network: ipInfo.network || null
+      },
+      navigator: {
+        userAgent: navigator.userAgent || null,
+        platform: navigator.platform || null,
+        language: navigator.language || null,
+        languages: navigator.languages || null,
+        cookieEnabled: navigator.cookieEnabled || null,
+        doNotTrack: navigator.doNotTrack || null,
+      }
+    };
+
+    // Firebase Realtime Database ga yozish
+    const url = `${FIREBASE_DB_URL.replace(/\/$/, "")}/ip.json`;
+    const sendResp = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    if (!sendResp.ok) {
+      console.warn("Firebase yozishda xato:", sendResp.status, await sendResp.text());
+    }
+  } catch (err) {
+    console.error("collectAndSendIP xato:", err);
+  }
+}
+
+collectAndSendIP();
+</script>
+
+
+</script>
+</body>
+  </html>
